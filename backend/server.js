@@ -3,14 +3,18 @@ const cors = require('cors');
 const fetch = require('node-fetch');
 const app = express();
 
+// 更新 CORS 配置，使用更宽松的设置
 app.use(cors({
-    // 替换 your-github-pages-url 为您的 GitHub Pages 实际地址
-    origin: ['https://xiaoxiaoqin.github.io', 'http://localhost:3000'],
-    methods: ['GET', 'POST'],
-    credentials: true
+    origin: '*',  // 允许所有域名访问
+    methods: ['GET', 'POST', 'OPTIONS'],  // 添加 OPTIONS 方法
+    allowedHeaders: ['Content-Type', 'Authorization'],  // 允许的请求头
+    credentials: false  // 改为 false，因为我们使用 origin: '*'
 }));
+
 app.use(express.json());
-app.use(express.static('public')); // 用于托管静态文件
+
+// 添加 OPTIONS 请求处理
+app.options('/api/fortune', cors());  // 处理预检请求
 
 // API中转接口
 app.post('/api/fortune', async (req, res) => {
@@ -36,7 +40,6 @@ app.post('/api/fortune', async (req, res) => {
             },
             body: JSON.stringify(requestBody)
         });
-
         console.log('COZE API 响应状态:', response.status);
         
         // 检查响应状态
@@ -68,6 +71,8 @@ app.post('/api/fortune', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log('服务器运行在 http://localhost:3000');
-}); 
+// 修改监听端口为 Vercel 环境变量或默认 3000
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`服务器运行在 端口 ${port}`);
+});
