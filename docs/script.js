@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // 完整 URL = 域名 + API路径
-            const response = await fetch('https://qiuqian2.vercel.app/api/fortune', {
+            const response = await fetch('https://qiuqian3-0.vercel.app/api/fortune', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
